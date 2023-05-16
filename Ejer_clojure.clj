@@ -34,4 +34,36 @@
 ;; 7)
 ;; Definir la función invertir que reciba un número entero no negativo y lo devuelva 
 ;; espejado.
-(defn invertir [a] (str a))
+(defn invertir [a] (symbol (reduce str (reverse (apply list (str a))))))
+(defn borrarBarras [a] (symbol (str a)))
+
+;; 8)
+;; Definir la función nth-fibo que reciba un número entero no negativo y devuelva el 
+;; correspondiente término de la sucesión de Fibonacci.
+(defn nth-fibo [a] (if (> a 0) () 'No-es-un-numero-positivo))
+
+;; 9)
+;; Definir la función cant-dig que reciba un número entero y devuelva la cantidad de 
+;; dígitos que este tiene.
+(defn cant-dig [a] (count (apply list (str a))))
+
+;; 10)
+;; Definir la función pot? que reciba dos números naturales y devuelva true si el 
+;; primero es potencia del segundo; si no, false.
+(defn pot? [a b] (= a (* b b)))
+
+;; 11)
+;; Definir la función digs que reciba un número y devuelva una lista con sus dígitos.
+(defn digs [a] (map borrarBarras (apply list (str a))))
+
+;; 12
+;; Definir la función repartir que, llamada sin argumentos, devuelva la cadena
+;; "Uno para vos, uno para mí". De lo contrario, se devolverá una lista, en la que 
+;; habrá una cadena "Uno para X, uno para mí" por cada argumento X.
+(defn repartir [& a] (if (nil? a) "Uno para vos, uno para mi" (map (fn [x] (apply str (concat "Uno para " x ", uno para mi"))) a )))
+
+;; 13
+;; Definir una función para producir una lista con los elementos en las posiciones pares 
+;; de dos listas dadas
+(defn listaConElementosPares [seq1 seq2] (list ))
+
