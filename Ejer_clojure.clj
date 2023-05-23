@@ -65,5 +65,27 @@
 ;; 13
 ;; Definir una función para producir una lista con los elementos en las posiciones pares 
 ;; de dos listas dadas
-(defn listaConElementosPares [seq1 seq2] (list ))
+(defn listaConElementosPares [seq1 seq2] (concat (elemPares seq1) (elemPares seq2)))
+(defn elemPares [seq] (map first (partition 2 seq)))
+;; CORREGIR PARA QUE EL ULTIMO VALOR DE UNA SEQUENCIA IMPAR SEA AGREGADO
+
+;; 14
+;; La transcripción es el proceso en el que la secuencia de ADN de un gen se copia 
+;; (Tanscribe) para hacer una molécula de ARN. La cadena de ARN transcrita se forma 
+;; reemplazando cada nucleótido del ADN por su complemento de ARN: G → C, C → G, 
+;; T → A y, por último, A → U. Definir la función adn2arn que reciba una cadena de 
+;; ADN y la devuelva transcrita en ARN
+(defn adn2arn [adn] (map gcta adn))
+(defn gcta [x] (cond 
+    (= x 'G) 'C
+    (= x 'C) 'G
+    (= x 'T) 'A
+    (= x 'A) 'U
+))
+
+;; 15
+;; Definir una función para eliminar las ocurrencias de un dato escalar en una lista (a 
+;; todo nivel).
+(defn eliminarOcurrencias [seq a] (if (seq? (first seq)) ((remove (fn [x] (= x a)) (first seq))) (remove (fn [x] (= x a)) seq)))
+
 
