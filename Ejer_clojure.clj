@@ -1,3 +1,14 @@
+
+(defn pertenece [seq a] (aany? (fn [x] (= x a)) seq))
+(defn planchar [lis] (if (empty? lis) 
+                       '() ;; si la lista está vacía, devuelve vacío
+                       (if (seq? (first lis)) ;; si el primer elemento es una lista
+                         (concat (planchar (first lis)) (planchar (rest lis))) ;; concatenar el primer elemento de la lista PLANCHADA con la original MENOS EL PRIMER ELEMENTO
+                         (cons (first lis) (planchar (rest lis))) ;; sino, concatenar el primer elemento con la lista original MENOS EL PRIMER ELEMENTO
+                         )
+                       )
+  )
+
 ;; 1)
 ;; Definir la función tercer-angulo que reciba los valores de dos de los ángulos 
 ;; interiores de un triángulo y devuelva el valor del restante.
@@ -18,8 +29,8 @@
 ;; Definir las funciones red, green, blue y alpha que reciban el valor numérico de un 
 ;; color de 32 bits y devuelvan, respectivamente, los valores de las componentes rojo, 
 ;; verde, azul y alfa (RGBA: red, green, blue, alpha) del mismo.
-(defn red [color] (quot color 0x10000))
-(defn blue [color] (rem (quot color 0x100) 0x100))
+(defn red [color] (quot color 0x1000000))
+(defn blue [color] (rem (quot color 0x10000) 0x10000))
 (defn green [color] (rem color 0x100))
 
 ;; 5)
@@ -29,7 +40,7 @@
 ;; 15259 => false
 ;; 1225 => false
 ;; 454 => true
-(defn capicua [a] (list a))
+(defn capicua [a] (partition a))
 
 ;; 7)
 ;; Definir la función invertir que reciba un número entero no negativo y lo devuelva 
@@ -86,6 +97,62 @@
 ;; 15
 ;; Definir una función para eliminar las ocurrencias de un dato escalar en una lista (a 
 ;; todo nivel).
-(defn eliminarOcurrencias [seq a] (if (seq? (first seq)) ((remove (fn [x] (= x a)) (first seq))) (remove (fn [x] (= x a)) seq)))
+(defn aany? [fun seq] (false? (not-any? fun seq)))
+(defn eliminarOcurrencias [seq a] (if (aany? seq? seq) (remove (fn [x] (= x a)) (map (fn [x] (if (seq? x) (eliminarOcurrencias x a) x)) seq)) (remove (fn [x] (= x a)) seq)))
 
+;; 16
+;; Definir una función para obtener el último símbolo de una lista (a todo nivel)
+(defn ultimoSimbolo [lis] (last (filter symbol? (flatten lis))))
+
+;; 17
+;; Definir una función para obtener el elemento central de una lista
+(defn medio [lis] (first (second (partition (quot (count lis) 2) lis))))
+
+;; 18
+;; Definir una función para eliminar los elementos repetidos de una lista simple
+(defn elemRepetidos [lis] (if (empty? lis) lis (cons (first lis) (elemRepetidos (filter (fn [x] (not= (first lis) x)) (rest lis))))))
+
+;; 19
+;; Definir una función para ordenar una lista de listas por longitud creciente.
+(defn ordenarListas [lis] (sort (fn [x y] (- (count y) (count x))) lis))
+                                 
+;; 20 
+;; Un ISBN-10 es válido si sus 10 dígitos x1, x2, x3, ... x10 cumplen lo siguiente:
+;; (x1 * 10 + x2 * 9 + x3 * 8 + x4 * 7 + x5 * 6 + x6 * 5 + x7 * 4 + x8 * 3 + x9 * 2 + x10 * 1) mod 11 == 0
+;; Un ISBN-10 está dividido en cuatro partes: el código de país o lengua de origen (de 1 
+;; a 5 dígitos), el editor, el número del artículo y un dígito de control. Opcionalmente, 
+;; estas cuatro partes pueden estar separadas mediante espacios en blanco o guiones. 
+;; El dígito de control puede valer X que representa el valor 10. Por ejemplo,
+;; 3-598-21507-X es un ISBN-10 válido. Escribir la función isbn-10? que devuelve 
+;; true si la cadena recibida es un ISBN-10 válido; si no, false.
+(defn convertir-a-num [lis] (map (fn [x] (- (long x) 48)) lis))
+(defn isbn-10-to-num [cad] (if (= (last cad) \X) (concat (convertir-a-num (filter (fn [x] (and (not= x \-) (not= x \X))) (butlast (apply list cad)))) '(10)) (convertir-a-num (filter (fn [x] (not= x \-)) (apply list cad)))))
+(defn isbn-10? [isbn] (= (rem (reduce (fn [x y] (+ x y)) (map (fn [x y] (* x y)) (isbn-10-to-num isbn) '(10 9 8 7 6 5 4 3 2 1))) 11) 0))
+
+;; 21 
+;; Definir una función para obtener la matriz triangular superior (incluyendo la diagonal
+;; principal) de una matriz cuadrada que está representada como una lista de listas.
+(defn matrizTrangularSuperior [mat] (map (fn [x] (map (fn [y] (if (> (.indexOf mat x) (.indexOf x y)) 0 y)) x)) mat))
+
+;; 22
+;; Definir una función para obtener la diagonal principal de una matriz cuadrada que
+;; está representada como una lista de listas.
+(defn diagonalPrincipal [mat] (map (fn [x] (first (drop (.indexOf mat x) x))) mat))
+
+;; 23
+;; Definir una función para transponer una lista de listas.
+(defn trans [lis] (apply map list lis))
+
+;; 24
+;; Definir una función que cuente las apariciones de cada nucleótido en una cadena de
+;; ADN
+(defn strNucleotido [adn] (map borrarBarras (apply list adn)))
+(defn countNucelotidos [adn] (list (count (filter (fn [x] (= x 'A)) (strNucleotido adn))) (count (filter (fn [x] (= x 'C)) (strNucleotido adn))) (count (filter (fn [x] (= x 'G)) (strNucleotido adn))) (count (filter (fn [x] (= x 'T)) (strNucleotido adn)))))
+
+;; 25
+;; Definir una función que cuente las apariciones de cada palabra en una frase.
+(defn countPalabras [cad] ( (apply list cad)))
+
+;; Parcial
+(defn esPerfecto? [n] (= (reduce (fn [x y] (+ x y)) (filter (fn [x] (= (rem n x) 0)) (first (partition (inc (quot (count (range 1 n)) 2)) (range 1 n))))) n))
 
